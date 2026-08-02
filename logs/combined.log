@@ -345,3 +345,17 @@
 2026-08-02 21:01:26 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
 2026-08-02 21:06:15 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
 2026-08-02 21:36:39 info: ::ffff:127.0.0.1 - - [02/Aug/2026:16:06:39 +0000] "GET /api/health HTTP/1.1" 200 70 "-" "-"
+2026-08-02 21:59:47 warn: Primary MongoDB connection failed, retrying with local fallback: mongodb://127.0.0.1:27017/zerohunger
+2026-08-02 22:00:17 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+2026-08-02 22:08:49 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 22:08:49 info: 🚀 ZeroHunger API running on port 3000
+2026-08-02 22:08:49 info: 📋 Environment: development
+2026-08-02 22:09:47 info: 127.0.0.1 - - [02/Aug/2026:16:39:47 +0000] "GET / HTTP/1.1" 200 135 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 22:09:48 info: 127.0.0.1 - - [02/Aug/2026:16:39:48 +0000] "GET /favicon.ico HTTP/1.1" 404 70 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 22:10:25 info: 127.0.0.1 - - [02/Aug/2026:16:40:25 +0000] "GET / HTTP/1.1" 200 135 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.131.0 Chrome/148.0.7778.280 Electron/42.7.0 Safari/537.36"
+2026-08-02 22:10:25 info: 127.0.0.1 - - [02/Aug/2026:16:40:25 +0000] "GET /favicon.ico HTTP/1.1" 404 70 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.131.0 Chrome/148.0.7778.280 Electron/42.7.0 Safari/537.36"
+2026-08-02 22:11:56 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-02 22:13:32 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net
+2026-08-02 22:13:36 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-02 22:13:39 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-02 22:13:49 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net

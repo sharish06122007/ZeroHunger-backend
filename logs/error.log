@@ -25,3 +25,9 @@
 2026-08-02 21:00:47 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
 2026-08-02 21:01:26 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
 2026-08-02 21:06:15 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+2026-08-02 22:00:17 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+2026-08-02 22:11:56 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-02 22:13:32 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-02 22:13:36 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-02 22:13:39 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-02 22:13:49 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000

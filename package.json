@@ -4,8 +4,8 @@
   "description": "Production‑ready backend for ZeroHunger 360 Angular frontend",
   "main": "src/server.js",
   "scripts": {
+   "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
     "seed": "node src/seed.js",
     "docs:generate": "node src/utils/generateOpenApiSpecs.js",
     "lint": "eslint . --ext .js,.ts",
