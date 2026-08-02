@@ -1,0 +1,331 @@
+openapi: 3.0.3
+info:
+    title: 'ZeroHunger Enterprise SaaS API'
+    version: 2.0.0
+    description: "\n## ZeroHunger Enterprise Food Rescue & Redistribution Network API\n\nZeroHunger is an AI-powered logistics platform connecting commercial food donors (hotels, restaurants, bakeries) with verified NGOs, shelters, and volunteer couriers to eliminate food waste and hunger.\n\n### Key Capabilities\n* **Authentication & Identity**: JWT bearer auth, role-based access control, OTP verification, self-service profile setup.\n* **Food Rescue Listings**: Post surplus food, category classification, expiration window tracking, geolocation pickup bounds.\n* **Fulfillment & Dispatch**: Bulk request placement by NGOs, volunteer task allocation, delivery status pipeline.\n* **Enterprise Analytics**: Real-time stats, weekly trends, environmental CO₂ impact metrics, and administrative audit logs.\n\n### Security\nAll protected endpoints require an HTTP Authorization header formatted as:\n```\nAuthorization: Bearer <your_jwt_token>\n```\n    "
+    termsOfService: 'https://zerohunger.org/terms'
+    contact:
+        name: 'ZeroHunger API Support Team'
+        email: api-support@zerohunger.org
+        url: 'https://zerohunger.org'
+    license:
+        name: 'MIT License'
+        url: 'https://opensource.org/licenses/MIT'
+externalDocs:
+    description: 'ZeroHunger Architecture & Developer Guide'
+    url: 'https://zerohunger.org/docs'
+servers:
+    -
+        url: 'http://localhost:3000'
+        description: 'Local Development Server'
+    -
+        url: 'https://zerohunger-api.onrender.com'
+        description: 'Production Cloud Instance'
+tags:
+    -
+        name: 'Health Check'
+        description: 'System status & database heartbeat ping'
+    -
+        name: Authentication
+        description: 'User registration, login, OTP verification, and JWT session handling'
+    -
+        name: 'Food Donations'
+        description: 'Surplus food listing publication, discovery, reservation, and status tracking'
+    -
+        name: 'Food Requests'
+        description: 'NGO bulk food requirements, claim approvals, and fulfillment status'
+    -
+        name: 'Dashboard & Analytics'
+        description: 'Executive metrics, trend lines, and user activity streams'
+    -
+        name: 'Admin Control'
+        description: 'System user management, role assignments, and security audit'
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+            description: 'Provide a valid JWT token obtained from `/api/v1/auth/login` or `/api/v1/auth/register`.'
+    schemas:
+        User:
+            type: object
+            properties: {_id: {type: string, example: 66a9b12c8f413d29a01048b1}, fullName: {type: string, example: 'Jane Doe'}, email: {type: string, format: email, example: jane.doe@grandhyatt.com}, role: {type: string, enum: [restaurant, donor, ngo, volunteer, admin], example: restaurant}, city: {type: string, example: 'San Francisco'}, address: {type: string, example: '123 Market St, Dock 4'}, phone: {type: string, example: '+14155552671'}, organizationName: {type: string, example: 'Grand Hyatt Kitchens'}, bio: {type: string, example: 'Executive culinary team dedicated to zero food waste.'}, isVerified: {type: boolean, example: true}, createdAt: {type: string, format: date-time, example: '2026-08-01T10:00:00.000Z'}}
+        Food:
+            type: object
+            properties: {_id: {type: string, example: 66a9c80f8f413d29a01049c5}, title: {type: string, example: '50 Fresh Gourmet Prepared Meals'}, category: {type: string, enum: [cooked, raw, packaged, beverage, bakery, dairy, other], example: cooked}, quantity: {type: string, example: '50 boxes'}, status: {type: string, enum: [available, reserved, collected, expired], example: available}, expiryTime: {type: string, format: date-time, example: '2026-08-03T18:00:00.000Z'}, pickupTime: {type: string, example: 'Today between 5 PM - 8 PM'}, city: {type: string, example: 'San Francisco'}, pickupAddress: {type: string, example: '123 Market St, Dock 4'}, description: {type: string, example: 'Surplus dinner meals packaged in thermal containers.'}, donatedBy: {$ref: '#/components/schemas/User'}, claimedBy: {$ref: '#/components/schemas/User'}, images: {type: array, items: {type: string}, example: [/uploads/food-102.jpg]}, isActive: {type: boolean, example: true}, createdAt: {type: string, format: date-time, example: '2026-08-02T01:00:00.000Z'}}
+        Request:
+            type: object
+            properties: {_id: {type: string, example: 66a9d90e8f413d29a01050d2}, foodTitle: {type: string, example: '50 Cooked Dinner Boxes'}, quantityRequested: {type: string, example: '50 boxes'}, status: {type: string, enum: [pending, approved, rejected, completed, cancelled], example: pending}, requestedBy: {type: string, example: 'St. Jude Shelter'}, organization: {type: string, example: 'St. Jude Foundation'}, notes: {type: string, example: 'Requires refrigerated transport if possible.'}, createdAt: {type: string, format: date-time, example: '2026-08-02T02:15:00.000Z'}}
+        LoginRequest:
+            type: object
+            required: [email, password]
+            properties: {email: {type: string, format: email, example: admin@zerohunger.org}, password: {type: string, format: password, example: Password123!}}
+        RegisterRequest:
+            type: object
+            required: [fullName, email, password, role]
+            properties: {fullName: {type: string, example: 'Sarah Connor'}, email: {type: string, format: email, example: sarah.c@sheltercare.org}, password: {type: string, format: password, example: SecurePass2026!}, role: {type: string, enum: [restaurant, donor, ngo, volunteer, admin], example: ngo}, city: {type: string, example: 'San Francisco'}, organizationName: {type: string, example: 'ShelterCare Foundation'}, phone: {type: string, example: '+14155550199'}}
+        JWTResponse:
+            type: object
+            properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Authentication successful'}, token: {type: string, example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...}, refreshToken: {type: string, example: d9f0e1a2b3c4...}, data: {$ref: '#/components/schemas/User'}}
+        ApiResponse:
+            type: object
+            properties: {success: {type: boolean, example: true}, message: {type: string, example: 'Operation completed successfully'}, data: {type: object}}
+        ErrorResponse:
+            type: object
+            properties: {success: {type: boolean, example: false}, message: {type: string, example: 'Resource not found or unauthorized'}, errors: {type: array, items: {type: string}, example: ['Invalid resource identifier']}}
+        ValidationError:
+            type: object
+            properties: {success: {type: boolean, example: false}, message: {type: string, example: 'Validation failed'}, errors: {type: array, items: {type: object, properties: {field: {type: string, example: email}, message: {type: string, example: 'Must be a valid email address'}}}}}
+        Pagination:
+            type: object
+            properties: {page: {type: integer, example: 1}, limit: {type: integer, example: 10}, total: {type: integer, example: 45}, totalPages: {type: integer, example: 5}}
+    responses:
+        UnauthorizedError:
+            description: 'Authentication token is missing or invalid (401)'
+            content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}, example: {success: false, message: 'Authentication required. Token missing or expired.'}}}
+        ForbiddenError:
+            description: 'Insufficient role permissions (403)'
+            content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}, example: {success: false, message: 'Access forbidden. Required role permission missing.'}}}
+        NotFoundError:
+            description: 'Requested endpoint or resource not found (404)'
+            content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}, example: {success: false, message: 'Resource not found'}}}
+        ValidationError:
+            description: 'Request payload validation errors (400 / 422)'
+            content: {application/json: {schema: {$ref: '#/components/schemas/ValidationError'}}}
+        RateLimitError:
+            description: 'Too many requests sent within rate limit window (429)'
+            content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}, example: {success: false, message: 'Too many requests from this IP, please try again later.'}}}
+        InternalServerError:
+            description: 'Internal Server Error (500)'
+            content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}, example: {success: false, message: 'Internal server error occurred.'}}}
+paths:
+    /api/v1/requests:
+        get:
+            summary: 'Retrieve user''s food requests'
+            description: 'Returns a list of all food claims and requirements submitted by the authenticated user or organization.'
+            tags: ['Food Requests']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'List of food requests', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/Request'}}}}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+        post:
+            summary: 'Submit a new food request or claim'
+            description: 'Create a request for surplus food package allocation for an NGO shelter or community kitchen.'
+            tags: ['Food Requests']
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [foodTitle, quantityRequested], properties: {foodId: {type: string, example: 66a9c80f8f413d29a01049c5}, foodTitle: {type: string, example: '50 Cooked Dinner Boxes'}, quantityRequested: {type: string, example: '50 boxes'}, notes: {type: string, example: 'Refrigerated van transport arranged for 6 PM pickup.'}}}}}}
+            responses: {'201': {description: 'Request submitted successfully', content: {application/json: {schema: {$ref: '#/components/schemas/Request'}}}}, '400': {$ref: '#/components/responses/ValidationError'}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/requests/mine:
+        get:
+            summary: 'Get my submitted requests'
+            description: 'Fetch food claims submitted by the currently logged-in account.'
+            tags: ['Food Requests']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Array of requests', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/Request'}}}}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/requests/incoming:
+        get:
+            summary: 'Get incoming requests for donor listings'
+            description: 'Returns claim requests received by a donor for their published food items.'
+            tags: ['Food Requests']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Incoming requests retrieved', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/Request'}}}}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/requests/admin/all:
+        get:
+            summary: 'System admin view of all platform requests'
+            description: 'Requires Administrator role. Returns complete system requests audit log across all users.'
+            tags: ['Admin Control', 'Food Requests']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'All requests array'}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '403': {$ref: '#/components/responses/ForbiddenError'}}
+    '/api/v1/requests/{id}':
+        get:
+            summary: 'Get request details by ID'
+            description: 'Retrieve metadata and status for a single request document.'
+            tags: ['Food Requests']
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}}]
+            responses: {'200': {description: 'Request document', content: {application/json: {schema: {$ref: '#/components/schemas/Request'}}}}, '404': {$ref: '#/components/responses/NotFoundError'}}
+    '/api/v1/requests/{id}/status':
+        put:
+            summary: 'Update request fulfillment status'
+            description: 'Update status of a request (approved, rejected, completed, cancelled).'
+            tags: ['Food Requests']
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [status], properties: {status: {type: string, enum: [pending, approved, rejected, completed, cancelled], example: approved}}}}}}
+            responses: {'200': {description: 'Request status updated', content: {application/json: {schema: {$ref: '#/components/schemas/Request'}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '404': {$ref: '#/components/responses/NotFoundError'}}
+    /api/v1/food:
+        get:
+            summary: 'Discover surplus food rescue listings'
+            description: 'Retrieve active surplus food listings filtered by category, status, city, or search term.'
+            tags: ['Food Donations']
+            parameters: [{in: query, name: search, schema: {type: string}, description: 'Search keyword for title, city, or donor name'}, {in: query, name: category, schema: {type: string, enum: [cooked, raw, packaged, beverage, bakery, dairy, other]}, description: 'Filter by food category'}, {in: query, name: status, schema: {type: string, enum: [available, reserved, collected, expired]}, description: 'Filter by availability status'}, {in: query, name: city, schema: {type: string}, description: 'Filter listings by city'}, {in: query, name: page, schema: {type: integer, default: 1}}, {in: query, name: limit, schema: {type: integer, default: 10}}]
+            responses: {'200': {description: 'Array of food listings retrieved successfully', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/Food'}}, pagination: {$ref: '#/components/schemas/Pagination'}}}}}}}
+        post:
+            summary: 'Post a new surplus food donation'
+            description: 'Publish a new surplus food listing. Requires authenticated donor or restaurant role. Supports optional multipart image attachments.'
+            tags: ['Food Donations']
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [title, quantity, expiryTime], properties: {title: {type: string, example: '50 Fresh Gourmet Dinner Boxes'}, category: {type: string, enum: [cooked, raw, packaged, beverage, bakery, dairy, other], example: cooked}, quantity: {type: string, example: '50 boxes'}, expiryTime: {type: string, format: date-time, example: '2026-08-05T18:00:00.000Z'}, pickupTime: {type: string, example: 'Today between 5 PM - 8 PM'}, city: {type: string, example: 'San Francisco'}, pickupAddress: {type: string, example: '123 Market St, Dock 4'}, description: {type: string, example: 'Surplus dinner meals stored in thermal food containers.'}}}}, multipart/form-data: {schema: {type: object, required: [title, quantity, expiryTime], properties: {title: {type: string}, category: {type: string}, quantity: {type: string}, expiryTime: {type: string, format: date-time}, pickupTime: {type: string}, city: {type: string}, pickupAddress: {type: string}, description: {type: string}, images: {type: array, items: {type: string, format: binary}}}}}}}
+            responses: {'201': {description: 'Food donation created successfully', content: {application/json: {schema: {$ref: '#/components/schemas/Food'}}}}, '400': {$ref: '#/components/responses/ValidationError'}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '403': {$ref: '#/components/responses/ForbiddenError'}}
+    /api/v1/food/me:
+        get:
+            summary: 'Retrieve user''s posted food listings'
+            description: 'Returns all surplus food donations posted by the authenticated user.'
+            tags: ['Food Donations']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'User''s food donations retrieved', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/Food'}}}}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    '/api/v1/food/{id}':
+        get:
+            summary: 'Get single food listing by ID'
+            description: 'Retrieve detailed metadata for a specific food rescue listing.'
+            tags: ['Food Donations']
+            parameters: [{in: path, name: id, required: true, schema: {type: string}, description: 'MongoDB Food Document ObjectId'}]
+            responses: {'200': {description: 'Food listing detail retrieved', content: {application/json: {schema: {$ref: '#/components/schemas/Food'}}}}, '404': {$ref: '#/components/responses/NotFoundError'}}
+        put:
+            summary: 'Update food listing details'
+            description: 'Update title, category, quantity, expiry time, or status of an existing food listing.'
+            tags: ['Food Donations']
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {title: {type: string}, status: {type: string, enum: [available, reserved, collected, expired]}, quantity: {type: string}, expiryTime: {type: string, format: date-time}}}}}}
+            responses: {'200': {description: 'Food listing updated', content: {application/json: {schema: {$ref: '#/components/schemas/Food'}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '404': {$ref: '#/components/responses/NotFoundError'}}
+        delete:
+            summary: 'Delete a food listing'
+            description: 'Permanently remove a food donation listing.'
+            tags: ['Food Donations']
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}}]
+            responses: {'200': {description: 'Food listing deleted successfully'}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '404': {$ref: '#/components/responses/NotFoundError'}}
+    /api/v1/dashboard/stats:
+        get:
+            summary: 'Retrieve executive key metrics'
+            description: 'Returns aggregated dashboard metrics including active surplus, meals saved, completed deliveries, and CO2 offset.'
+            tags: ['Dashboard & Analytics']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Dashboard metrics payload', content: {application/json: {example: {success: true, data: {totalDonations: 142, availableFood: 18, completedRequests: 128, activeVolunteers: 45, mealsSaved: 1240, co2SavedKg: 850}}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/dashboard/activity:
+        get:
+            summary: 'Get recent platform activity stream'
+            description: 'Retrieves live activity logs for food donations, claims, and courier dispatches.'
+            tags: ['Dashboard & Analytics']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Stream of recent activities'}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/dashboard/charts:
+        get:
+            summary: 'Get weekly rescue analytics trend data'
+            description: 'Returns weekly trend data for rendering SVG impact charts.'
+            tags: ['Dashboard & Analytics']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Weekly chart dataset'}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/dashboard/users:
+        get:
+            summary: 'List all registered platform users'
+            description: 'Requires Admin role. Returns all user accounts across donors, NGOs, volunteers, and restaurants.'
+            tags: ['Admin Control']
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'List of user accounts', content: {application/json: {schema: {type: object, properties: {success: {type: boolean, example: true}, data: {type: array, items: {$ref: '#/components/schemas/User'}}}}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '403': {$ref: '#/components/responses/ForbiddenError'}}
+    '/api/v1/dashboard/users/{id}':
+        put:
+            summary: 'Update user role or verification status'
+            description: 'Requires Admin role. Modify a user''s role or verification status.'
+            tags: ['Admin Control']
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {role: {type: string, enum: [restaurant, donor, ngo, volunteer, admin]}, isVerified: {type: boolean}}}}}}
+            responses: {'200': {description: 'User updated successfully'}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '403': {$ref: '#/components/responses/ForbiddenError'}}
+        delete:
+            summary: 'Suspend or delete user account'
+            description: 'Requires Admin role. Delete a user account from the platform.'
+            tags: ['Admin Control']
+            security: [{bearerAuth: []}]
+            parameters: [{in: path, name: id, required: true, schema: {type: string}}]
+            responses: {'200': {description: 'User account deleted'}, '401': {$ref: '#/components/responses/UnauthorizedError'}, '403': {$ref: '#/components/responses/ForbiddenError'}}
+    /api/v1/auth/register:
+        post:
+            summary: 'Register a new user or organization'
+            description: 'Creates a new user profile with selected role (restaurant, donor, ngo, volunteer, admin) and triggers email verification OTP.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/RegisterRequest'}}}}
+            responses: {'201': {description: 'User created successfully. Verification OTP dispatched.', content: {application/json: {schema: {$ref: '#/components/schemas/JWTResponse'}}}}, '400': {$ref: '#/components/responses/ValidationError'}, '409': {description: 'Email already registered', content: {application/json: {example: {success: false, message: 'User already exists with this email address'}}}}, '429': {$ref: '#/components/responses/RateLimitError'}, '500': {$ref: '#/components/responses/InternalServerError'}}
+    /api/v1/auth/verify-email:
+        post:
+            summary: 'Verify account via 6-digit OTP code'
+            description: 'Validates the 6-digit OTP sent to the user''s registered email address to activate their account.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [email, otp], properties: {email: {type: string, format: email, example: sarah.c@sheltercare.org}, otp: {type: string, example: '482901'}}}}}}
+            responses: {'200': {description: 'Email verified successfully', content: {application/json: {schema: {$ref: '#/components/schemas/ApiResponse'}, example: {success: true, message: 'Email verified successfully. You may now log in.'}}}}, '400': {$ref: '#/components/responses/ValidationError'}, '404': {$ref: '#/components/responses/NotFoundError'}}
+    /api/v1/auth/resend-otp:
+        post:
+            summary: 'Resend email verification OTP'
+            description: 'Dispatches a fresh 6-digit OTP verification code to the registered email address.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [email], properties: {email: {type: string, format: email, example: sarah.c@sheltercare.org}}}}}}
+            responses: {'200': {description: 'New OTP code generated and sent', content: {application/json: {schema: {$ref: '#/components/schemas/ApiResponse'}}}}}
+    /api/v1/auth/login:
+        post:
+            summary: 'Authenticate user & issue JWT tokens'
+            description: 'Authenticates user credentials and returns a Bearer JWT access token and session cookie.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/LoginRequest'}}}}
+            responses: {'200': {description: 'Login successful. JWT token returned.', content: {application/json: {schema: {$ref: '#/components/schemas/JWTResponse'}}}}, '401': {description: 'Invalid credentials', content: {application/json: {example: {success: false, message: 'Invalid email or password'}}}}, '429': {$ref: '#/components/responses/RateLimitError'}}
+    /api/v1/auth/refresh:
+        post:
+            summary: 'Refresh access token'
+            description: 'Exchange a valid refresh token for a new Bearer JWT access token.'
+            tags: [Authentication]
+            requestBody: {required: false, content: {application/json: {schema: {type: object, properties: {refreshToken: {type: string}}}}}}
+            responses: {'200': {description: 'Token refreshed', content: {application/json: {schema: {$ref: '#/components/schemas/JWTResponse'}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/auth/logout:
+        post:
+            summary: 'Terminate session & invalidate token'
+            description: 'Clears HTTP-only session cookies and revokes refresh tokens.'
+            tags: [Authentication]
+            responses: {'200': {description: 'Logout successful', content: {application/json: {example: {success: true, message: 'Logged out successfully'}}}}}
+    /api/v1/auth/forgot-password:
+        post:
+            summary: 'Request password reset OTP'
+            description: 'Sends a password recovery OTP code to the requested registered email address.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [email], properties: {email: {type: string, format: email, example: jane.doe@grandhyatt.com}}}}}}
+            responses: {'200': {description: 'Password reset OTP dispatched'}, '404': {$ref: '#/components/responses/NotFoundError'}}
+    /api/v1/auth/verify-otp:
+        post:
+            summary: 'Verify password recovery OTP'
+            description: 'Validates the password reset OTP code before allowing password updates.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [email, otp], properties: {email: {type: string, format: email, example: jane.doe@grandhyatt.com}, otp: {type: string, example: '918234'}}}}}}
+            responses: {'200': {description: 'OTP verified'}}
+    /api/v1/auth/reset-password:
+        post:
+            summary: 'Reset password with verified OTP'
+            description: 'Resets the account password using the verified OTP code.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [email, otp, newPassword], properties: {email: {type: string, format: email, example: jane.doe@grandhyatt.com}, otp: {type: string, example: '918234'}, newPassword: {type: string, format: password, example: NewSecurePass2026!}}}}}}
+            responses: {'200': {description: 'Password reset successful'}}
+    /api/v1/auth/me:
+        get:
+            summary: 'Get current authenticated user profile'
+            description: 'Returns the user object of the currently authenticated Bearer token.'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            responses: {'200': {description: 'Profile retrieved', content: {application/json: {schema: {$ref: '#/components/schemas/User'}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+        put:
+            summary: 'Update profile details'
+            description: 'Update city, address, organization name, phone, or bio for the authenticated user.'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {fullName: {type: string}, phone: {type: string}, city: {type: string}, organizationName: {type: string}, address: {type: string}, bio: {type: string}}}}}}
+            responses: {'200': {description: 'Profile updated successfully', content: {application/json: {schema: {$ref: '#/components/schemas/User'}}}}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /api/v1/auth/me/password:
+        put:
+            summary: 'Change current password'
+            description: 'Change account password by providing current password and new password.'
+            tags: [Authentication]
+            security: [{bearerAuth: []}]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, required: [currentPassword, newPassword], properties: {currentPassword: {type: string, format: password}, newPassword: {type: string, format: password}}}}}}
+            responses: {'200': {description: 'Password updated successfully'}, '400': {$ref: '#/components/responses/ValidationError'}, '401': {$ref: '#/components/responses/UnauthorizedError'}}
+    /health:
+        get:
+            summary: 'System & Database Health Endpoint'
+            description: 'Returns heartbeat, database connection status, and uptime.'
+            tags: ['Health Check']
+            responses: {'200': {description: 'System operational', content: {application/json: {example: {status: ok, database: connected, uptime: 1234, timestamp: '2026-08-02T16:30:00.000Z'}}}}}

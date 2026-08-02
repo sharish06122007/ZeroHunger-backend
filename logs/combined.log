@@ -256,3 +256,30 @@
 2026-08-02 16:12:29 info: ::1 - - [02/Aug/2026:10:42:29 +0000] "POST /api/v1/food HTTP/1.1" 400 176 "http://localhost:4200/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
 2026-08-02 16:12:44 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
 2026-08-02 16:12:44 info: ::1 - - [02/Aug/2026:10:42:44 +0000] "POST /api/v1/food HTTP/1.1" 400 176 "http://localhost:4200/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:31:46 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net
+2026-08-02 16:31:46 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:31:46 info: 📋 Environment: development
+2026-08-02 16:31:51 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:31:51 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:31:51 info: 📋 Environment: development
+2026-08-02 16:31:55 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net
+2026-08-02 16:31:55 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:31:55 info: 📋 Environment: development
+2026-08-02 16:32:00 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:32:00 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:32:00 info: 📋 Environment: development
+2026-08-02 16:32:03 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:32:03 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:32:03 info: 📋 Environment: development
+2026-08-02 16:33:23 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net
+2026-08-02 16:33:23 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:33:23 info: 📋 Environment: development
+2026-08-02 16:33:27 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:33:27 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:33:27 info: 📋 Environment: development
+2026-08-02 16:33:31 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:33:31 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:33:31 info: 📋 Environment: development
+2026-08-02 16:33:42 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-02 16:33:42 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:33:42 info: 📋 Environment: development

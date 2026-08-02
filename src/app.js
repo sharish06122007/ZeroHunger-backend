@@ -7,7 +7,11 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
+const { swaggerSpec } = require('./config/swagger');
 const rateLimiter = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./config/logger');
@@ -45,9 +49,61 @@ app.use(rateLimiter.global);
 // Static Files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Health Check
+/**
+ * @openapi
+ * /health:
+ *   get:
+ *     summary: System & Database Health Endpoint
+ *     description: Returns heartbeat, database connection status, and uptime.
+ *     tags:
+ *       - Health Check
+ *     responses:
+ *       200:
+ *         description: System operational
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: "ok"
+ *               database: "connected"
+ *               uptime: 1234
+ *               timestamp: "2026-08-02T16:30:00.000Z"
+ */
+app.get('/health', (req, res) => {
+  const isDbConnected = mongoose.connection && mongoose.connection.readyState === 1;
+  res.json({
+    status: 'ok',
+    database: isDbConnected ? 'connected' : 'disconnected',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get('/api/v1/health', (req, res) => {
-  res.json({ success: true, message: 'ZeroHunger API is running', version: '1.0.0', timestamp: new Date().toISOString() });
+  const isDbConnected = mongoose.connection && mongoose.connection.readyState === 1;
+  res.json({
+    success: true,
+    message: 'ZeroHunger API is running',
+    version: '2.0.0',
+    database: isDbConnected ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Swagger OpenAPI Specification UI & Specs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none } .swagger-ui { font-family: sans-serif }',
+  customSiteTitle: 'ZeroHunger API Documentation',
+}));
+
+app.get('/openapi.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+app.get('/openapi.yaml', (req, res) => {
+  res.setHeader('Content-Type', 'text/yaml');
+  const yamlString = YAML.stringify(swaggerSpec, 4);
+  res.send(yamlString);
 });
 
 // API Routes (v1)
