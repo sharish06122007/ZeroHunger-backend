@@ -66,6 +66,7 @@ const corsOptions = {
     const isAllowed = allowedOrigins.includes(origin)
       || /^https:\/\/.*\.vercel\.app$/i.test(origin)
       || /^https:\/\/.*\.up\.railway\.app$/i.test(origin)
+      || /^https:\/\/.*\.netlify\.app$/i.test(origin)
       || /^http:\/\/localhost(:\d+)?$/i.test(origin)
       || /^https:\/\/localhost(:\d+)?$/i.test(origin);
 
@@ -74,10 +75,12 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Set-Cookie'],
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 
 // ===============================
