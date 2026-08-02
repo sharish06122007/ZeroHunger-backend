@@ -18,3 +18,8 @@
 2026-08-02 16:12:15 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
 2026-08-02 16:12:29 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
 2026-08-02 16:12:44 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 19:17:34 error: MongoDB connection error: getaddrinfo ENOTFOUND mongodb.railway.internal
+2026-08-02 20:50:43 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+2026-08-02 20:52:22 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+2026-08-02 21:00:09 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017
+2026-08-02 21:00:47 error: MongoDB connection error: connect ECONNREFUSED 127.0.0.1:27017

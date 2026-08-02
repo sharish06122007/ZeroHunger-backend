@@ -8,7 +8,7 @@ const RequestSchema = new mongoose.Schema(
     assignedVolunteer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     status: {
       type: String,
-      enum: ['pending', 'accepted', 'rejected', 'in_transit', 'completed', 'cancelled'],
+      enum: ['pending', 'approved', 'accepted', 'rejected', 'in_transit', 'completed', 'cancelled'],
       default: 'pending',
     },
     notes: { type: String, trim: true, default: '' },

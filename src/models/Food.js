@@ -19,7 +19,7 @@ const FoodSchema = new mongoose.Schema(
       default: 'available',
     },
     expiryTime: { type: Date, required: true },
-    pickupTime: { type: Date },
+    pickupTime: { type: String, trim: true, default: '' },
     pickupAddress: { type: String, trim: true, default: '' },
     city: { type: String, trim: true, default: '' },
     location: {

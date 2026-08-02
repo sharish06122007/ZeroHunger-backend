@@ -160,6 +160,7 @@ router.get('/', asyncHandler(getAllFood));
  *         $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/me', protect, asyncHandler(getMyFood));
+router.get('/my-donations', protect, asyncHandler(getMyFood));
 
 /**
  * @openapi

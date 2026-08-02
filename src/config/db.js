@@ -3,13 +3,31 @@ const mongoose = require('mongoose');
 const logger = require('./logger');
 
 const connectDB = async () => {
+  const rawPrimaryUri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/zerohunger';
+  const primaryUri = String(rawPrimaryUri).trim().replace(/;+$/, '');
+  const fallbackUri = 'mongodb://127.0.0.1:27017/zerohunger';
+
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    const conn = await mongoose.connect(primaryUri, {
       // Modern mongoose options (can be blank or customized)
     });
     logger.info(`MongoDB connected: ${conn.connection.host}`);
     return conn;
   } catch (err) {
+    if (primaryUri !== fallbackUri) {
+      logger.warn(`Primary MongoDB connection failed, retrying with local fallback: ${fallbackUri}`);
+      try {
+        const conn = await mongoose.connect(fallbackUri, {
+          // Modern mongoose options (can be blank or customized)
+        });
+        logger.info(`MongoDB connected: ${conn.connection.host}`);
+        return conn;
+      } catch (fallbackErr) {
+        logger.error('MongoDB connection error:', fallbackErr);
+        process.exit(1);
+      }
+    }
+
     logger.error('MongoDB connection error:', err);
     process.exit(1);
   }

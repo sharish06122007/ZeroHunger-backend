@@ -1,8 +1,10 @@
 // controllers/requestController.js
+const mongoose = require('mongoose');
 const Request = require('../models/Request');
 const Food = require('../models/Food');
 const Notification = require('../models/Notification');
 const apiResponse = require('../utils/apiResponse');
+const { normalizeRequestStatus } = require('../utils/requestStatus');
 
 const createRequest = async (req, res) => {
   const { foodId, notes, deliveryAddress } = req.body;
@@ -14,7 +16,7 @@ const createRequest = async (req, res) => {
     return apiResponse.error(res, 'You cannot request your own food listing', [], 400);
   }
 
-  const existingRequest = await Request.findOne({ food: foodId, requestedBy: req.user._id, status: { $in: ['pending', 'accepted'] } });
+  const existingRequest = await Request.findOne({ food: foodId, requestedBy: req.user._id, status: { $in: ['pending', 'approved', 'accepted'] } });
   if (existingRequest) return apiResponse.error(res, 'You already have an active request for this food', [], 400);
 
   const request = await Request.create({
@@ -85,6 +87,10 @@ const getIncomingRequests = async (req, res) => {
 };
 
 const updateRequestStatus = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return apiResponse.error(res, 'Invalid request ID', [], 400);
+  }
+
   const { status, rejectionReason } = req.body;
   const request = await Request.findById(req.params.id).populate('food');
   if (!request) return apiResponse.error(res, 'Request not found', [], 404);
@@ -99,33 +105,39 @@ const updateRequestStatus = async (req, res) => {
     return apiResponse.error(res, 'Not authorized', [], 403);
   }
 
+  const normalizedStatus = normalizeRequestStatus(status);
   const allowedTransitions = {
-    accepted: ['pending'],
+    approved: ['pending'],
     rejected: ['pending'],
-    in_transit: ['accepted'],
+    in_transit: ['approved', 'accepted'],
     completed: ['in_transit'],
-    cancelled: ['pending', 'accepted'],
+    cancelled: ['pending', 'approved', 'accepted'],
   };
 
-  if (!allowedTransitions[status]?.includes(request.status)) {
-    return apiResponse.error(res, `Cannot transition from "${request.status}" to "${status}"`, [], 400);
+  if (!allowedTransitions[normalizedStatus]) {
+    return apiResponse.error(res, `Unsupported request status: ${status}`, [], 400);
   }
 
-  request.status = status;
-  if (status === 'accepted') request.acceptedAt = new Date();
-  if (status === 'completed') {
+  const currentStatus = normalizeRequestStatus(request.status);
+  if (!allowedTransitions[normalizedStatus]?.includes(currentStatus)) {
+    return apiResponse.error(res, `Cannot transition from "${currentStatus}" to "${normalizedStatus}"`, [], 400);
+  }
+
+  request.status = normalizedStatus;
+  if (normalizedStatus === 'approved') request.acceptedAt = new Date();
+  if (normalizedStatus === 'completed') {
     request.completedAt = new Date();
     await Food.findByIdAndUpdate(food._id, { status: 'collected', collectedBy: request.requestedBy });
   }
-  if (status === 'rejected') {
+  if (normalizedStatus === 'rejected') {
     request.rejectionReason = rejectionReason || '';
     await Food.findByIdAndUpdate(food._id, { status: 'available', reservedBy: null });
   }
-  if (status === 'cancelled') {
+  if (normalizedStatus === 'cancelled') {
     request.cancelledAt = new Date();
     await Food.findByIdAndUpdate(food._id, { status: 'available', reservedBy: null });
   }
-  if (status === 'in_transit' && isVolunteer) {
+  if (normalizedStatus === 'in_transit' && isVolunteer) {
     request.assignedVolunteer = req.user._id;
   }
 
@@ -134,14 +146,18 @@ const updateRequestStatus = async (req, res) => {
   await Notification.create({
     recipient: request.requestedBy,
     title: 'Request Status Updated',
-    message: `Your request for "${food.title}" is now: ${status.replace('_', ' ').toUpperCase()}`,
-    type: 'request_update',
+    message: `Your request for "${food.title}" is now: ${normalizedStatus.replace('_', ' ').toUpperCase()}`,
+    type: normalizedStatus === 'approved' ? 'request_approved' : 'request_update',
   });
 
   return apiResponse.success(res, request, 'Request status updated');
 };
 
 const getRequestById = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return apiResponse.error(res, 'Invalid request ID', [], 400);
+  }
+
   const request = await Request.findById(req.params.id)
     .populate('food')
     .populate('requestedBy', 'fullName email phone role')

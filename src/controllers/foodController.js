@@ -1,4 +1,5 @@
 // controllers/foodController.js
+const mongoose = require('mongoose');
 const Food = require('../models/Food');
 const Request = require('../models/Request');
 const apiResponse = require('../utils/apiResponse');
@@ -52,6 +53,10 @@ const getAllFood = async (req, res) => {
 };
 
 const getFoodById = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return apiResponse.error(res, 'Invalid food listing ID', [], 400);
+  }
+
   const food = await Food.findById(req.params.id)
     .populate('donatedBy', 'fullName email organizationName phone')
     .populate('reservedBy', 'fullName email')
@@ -62,6 +67,10 @@ const getFoodById = async (req, res) => {
 };
 
 const updateFood = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return apiResponse.error(res, 'Invalid food listing ID', [], 400);
+  }
+
   const food = await Food.findById(req.params.id);
   if (!food) return apiResponse.error(res, 'Food listing not found', [], 404);
 
@@ -83,6 +92,10 @@ const updateFood = async (req, res) => {
 };
 
 const deleteFood = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return apiResponse.error(res, 'Invalid food listing ID', [], 400);
+  }
+
   const food = await Food.findById(req.params.id);
   if (!food) return apiResponse.error(res, 'Food listing not found', [], 404);
 

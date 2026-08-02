@@ -2,7 +2,10 @@
 const logger = require('../config/logger');
 
 module.exports = (err, req, res, next) => {
-  if (res.headersSent) return next(err);
+  if (res.headersSent) {
+    if (typeof next === 'function') return next(err);
+    return res.status(500).json({ success: false, message: 'Internal Server Error', errors: [] });
+  }
 
   logger.error(`${err.message} | ${req.method} ${req.originalUrl}`);
 
