@@ -49,6 +49,11 @@ app.use(rateLimiter.global);
 // Static Files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Root Route - Redirects to Swagger UI
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
+});
+
 /**
  * @openapi
  * /health:
