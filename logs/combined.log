@@ -283,3 +283,32 @@
 2026-08-02 16:33:42 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
 2026-08-02 16:33:42 info: 🚀 ZeroHunger API running on http://localhost:3000
 2026-08-02 16:33:42 info: 📋 Environment: development
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs HTTP/1.1" 301 158 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs/ HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:41:10 info: ::1 - - [02/Aug/2026:11:11:10 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 200 628 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 16:47:48 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:47:48 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:47:48 info: 📋 Environment: development
+2026-08-02 16:47:55 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:47:55 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:47:55 info: 📋 Environment: development
+2026-08-02 16:48:02 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net
+2026-08-02 16:48:02 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:48:02 info: 📋 Environment: development
+2026-08-02 16:48:07 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 16:48:07 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 16:48:07 info: 📋 Environment: development
+2026-08-02 17:12:38 info: MongoDB disconnected through app termination
+2026-08-02 17:12:48 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-02 17:12:48 info: 🚀 ZeroHunger API running on http://localhost:3000
+2026-08-02 17:12:48 info: 📋 Environment: development
+2026-08-02 17:14:25 info: ::1 - - [02/Aug/2026:11:44:25 +0000] "GET /api-docs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 17:14:25 info: ::1 - - [02/Aug/2026:11:44:25 +0000] "GET /api-docs/swagger-ui.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 17:14:25 info: ::1 - - [02/Aug/2026:11:44:25 +0000] "GET /api-docs/swagger-ui-bundle.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 17:14:25 info: ::1 - - [02/Aug/2026:11:44:25 +0000] "GET /api-docs/swagger-ui-init.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 17:14:25 info: ::1 - - [02/Aug/2026:11:44:25 +0000] "GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-02 17:14:25 info: ::1 - - [02/Aug/2026:11:44:25 +0000] "GET /api-docs/favicon-32x32.png HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
