@@ -1,4 +1,4 @@
-// server.js - entry point
+// server.js - ZeroHunger Backend Entry Point
 
 require('dotenv').config();
 
@@ -8,33 +8,44 @@ const connectDB = require('./config/db');
 const logger = require('./config/logger');
 
 
+/*
+  Railway automatically provides PORT.
+  Local development uses 3000.
+*/
 const PORT = process.env.PORT || 3000;
+
 
 
 const startServer = async () => {
 
   try {
 
-    // Connect Database
+    // Connect MongoDB
     await connectDB();
 
 
-    // Create HTTP Server
+    // Create HTTP server
     const server = http.createServer(app);
 
 
-    // Listen on Railway port
-    server.listen(PORT, '0.0.0.0', () => {
 
-      logger.info(
-        `🚀 ZeroHunger API running on port ${PORT}`
-      );
+    // Start server
+    server.listen(
+      PORT,
+      '0.0.0.0',
+      () => {
 
-      logger.info(
-        `📋 Environment: ${process.env.NODE_ENV || 'development'}`
-      );
+        logger.info(
+          `🚀 ZeroHunger API running on port ${PORT}`
+        );
 
-    });
+        logger.info(
+          `📋 Environment: ${process.env.NODE_ENV || 'development'}`
+        );
+
+      }
+    );
+
 
 
     // Handle unhandled promise errors
@@ -43,7 +54,7 @@ const startServer = async () => {
       (reason) => {
 
         logger.error(
-          'Unhandled Rejection:',
+          'Unhandled Promise Rejection:',
           reason
         );
 
@@ -51,43 +62,89 @@ const startServer = async () => {
     );
 
 
-    // Graceful shutdown
-    process.on(
-      'SIGTERM',
-      () => {
 
-        logger.info(
-          'SIGTERM received — shutting down gracefully'
+    // Handle uncaught errors
+    process.on(
+      'uncaughtException',
+      (error) => {
+
+        logger.error(
+          'Uncaught Exception:',
+          error
         );
 
-
-        server.close(() => {
-
-          logger.info(
-            'HTTP server closed'
-          );
-
-
-          process.exit(0);
-
-        });
+        process.exit(1);
 
       }
     );
 
 
-  } catch(error){
+
+    // Railway shutdown handling
+    process.on(
+      'SIGTERM',
+      () => {
+
+        logger.info(
+          'SIGTERM received. Shutting down gracefully...'
+        );
+
+
+        server.close(
+          () => {
+
+            logger.info(
+              'HTTP server closed'
+            );
+
+
+            process.exit(0);
+
+          }
+        );
+
+      }
+    );
+
+
+
+    // Handle manual shutdown
+    process.on(
+      'SIGINT',
+      () => {
+
+        logger.info(
+          'SIGINT received. Shutting down...'
+        );
+
+
+        server.close(
+          () => {
+
+            process.exit(0);
+
+          }
+        );
+
+      }
+    );
+
+
+  } catch(error) {
+
 
     logger.error(
-      'Server startup failed:',
+      '❌ Server startup failed:',
       error
     );
+
 
     process.exit(1);
 
   }
 
 };
+
 
 
 startServer();
