@@ -1,0 +1,20 @@
+2026-08-01 18:31:10 error: MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2026-08-01 18:47:20 error: MongoDB connection error: bad auth : authentication failed
+2026-08-01 18:47:56 error: MongoDB connection error: bad auth : authentication failed
+2026-08-02 01:26:15 error: next is not a function | POST /api/v1/auth/register
+2026-08-02 01:29:59 error: Invalid login: 535 Authentication failed | POST /api/v1/auth/register
+2026-08-02 01:36:47 error: Error during seeding: Request validation failed: status: `approved` is not a valid enum value for path `status`.
+2026-08-02 01:36:57 error: Error during seeding: Notification validation failed: type: `request_approved` is not a valid enum value for path `type`.
+2026-08-02 01:39:04 error: Cast to ObjectId failed for value "req102" (type string) at path "_id" for model "Request" | PUT /api/v1/requests/req102/status
+2026-08-02 01:45:51 error: Cast to ObjectId failed for value "my-donations" (type string) at path "_id" for model "Food" | GET /api/v1/food/my-donations
+2026-08-02 01:55:34 error: Cast to ObjectId failed for value "my-donations" (type string) at path "_id" for model "Food" | GET /api/v1/food/my-donations
+2026-08-02 01:55:39 error: Cast to ObjectId failed for value "my-donations" (type string) at path "_id" for model "Food" | GET /api/v1/food/my-donations
+2026-08-02 15:57:33 error: Cast to ObjectId failed for value "my-donations" (type string) at path "_id" for model "Food" | GET /api/v1/food/my-donations
+2026-08-02 16:05:09 error: Food validation failed: pickupTime: Cast to date failed for value "8pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:05:52 error: Food validation failed: pickupTime: Cast to date failed for value "5pm  - 8pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:05:53 error: Food validation failed: pickupTime: Cast to date failed for value "5pm  - 8pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:05:54 error: Food validation failed: pickupTime: Cast to date failed for value "5pm  - 8pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:09:44 error: Food validation failed: pickupTime: Cast to date failed for value "8pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:12:15 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:12:29 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
+2026-08-02 16:12:44 error: Food validation failed: pickupTime: Cast to date failed for value "8pm to 11pm" (type string) at path "pickupTime" | POST /api/v1/food
