@@ -53,28 +53,31 @@ app.use(
 
 const allowedOrigins = [
   'http://localhost:4200',
-  process.env.CLIENT_URL
+  'http://localhost:3000',
+  'https://localhost:4200',
+  'https://zerohunger.vercel.app',
+  process.env.CLIENT_URL,
 ].filter(Boolean);
 
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: [
-      'GET',
-      'POST',
-      'PUT',
-      'PATCH',
-      'DELETE',
-      'OPTIONS'
-    ],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization'
-    ]
-  })
-);
+    const isAllowed = allowedOrigins.includes(origin)
+      || /^https:\/\/.*\.vercel\.app$/i.test(origin)
+      || /^https:\/\/.*\.up\.railway\.app$/i.test(origin)
+      || /^http:\/\/localhost(:\d+)?$/i.test(origin)
+      || /^https:\/\/localhost(:\d+)?$/i.test(origin);
+
+    if (isAllowed) return callback(null, origin);
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+};
+
+app.use(cors(corsOptions));
 
 
 // ===============================
