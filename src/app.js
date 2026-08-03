@@ -61,7 +61,9 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      return callback(null, true);
+    }
 
     const isAllowed = allowedOrigins.includes(origin)
       || /^https:\/\/.*\.vercel\.app$/i.test(origin)
@@ -70,12 +72,15 @@ const corsOptions = {
       || /^http:\/\/localhost(:\d+)?$/i.test(origin)
       || /^https:\/\/localhost(:\d+)?$/i.test(origin);
 
-    if (isAllowed) return callback(null, origin);
+    if (isAllowed) {
+      return callback(null, true);
+    }
+
     return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-Requested-With'],
   exposedHeaders: ['Set-Cookie'],
 };
 
