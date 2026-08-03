@@ -8,24 +8,24 @@ const connectDB = require('./config/db');
 const logger = require('./config/logger');
 
 
+const { initSocket } = require('./config/socket');
+
 /*
   Railway automatically provides PORT.
   Local development uses 3000.
 */
 const PORT = process.env.PORT || 3000;
 
-
-
 const startServer = async () => {
-
   try {
-
     // Connect MongoDB
     await connectDB();
 
-
     // Create HTTP server
     const server = http.createServer(app);
+
+    // Initialize Socket.IO
+    initSocket(server);
 
 
 

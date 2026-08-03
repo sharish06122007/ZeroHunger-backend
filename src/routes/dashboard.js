@@ -1,13 +1,28 @@
 // routes/dashboard.js
 const express = require('express');
 const asyncHandler = require('express-async-handler');
-const { getStats, getRecentActivity, getChartData, adminGetAllUsers, adminUpdateUser, adminDeleteUser } = require('../controllers/dashboardController');
+const {
+  getAnalytics,
+  getStats,
+  getLiveFeed,
+  getChartData,
+  getRecentActivity,
+  getLocationInfo,
+  adminGetAllUsers,
+  adminUpdateUser,
+  adminDeleteUser,
+} = require('../controllers/dashboardController');
 const protect = require('../middleware/auth');
 const role = require('../middleware/role');
 
 const router = express.Router();
 
 router.use(protect);
+
+router.get('/analytics', asyncHandler(getAnalytics));
+router.get('/stats', asyncHandler(getStats));
+router.get('/live', asyncHandler(getLiveFeed));
+router.get('/location', asyncHandler(getLocationInfo));
 
 /**
  * @openapi

@@ -25,6 +25,9 @@ const authRoutes = require('./routes/auth');
 const foodRoutes = require('./routes/food');
 const requestRoutes = require('./routes/requests');
 const dashboardRoutes = require('./routes/dashboard');
+const volunteerRoutes = require('./routes/volunteer');
+const notificationRoutes = require('./routes/notifications');
+const searchRoutes = require('./routes/search');
 
 
 const app = express();
@@ -336,6 +339,21 @@ app.use(
 app.use(
   '/api/v1/dashboard',
   dashboardRoutes
+);
+
+app.use(
+  '/api/v1/volunteer',
+  volunteerRoutes
+);
+
+app.use(
+  '/api/v1/notifications',
+  notificationRoutes
+);
+
+app.use(
+  '/api/v1/search',
+  searchRoutes
 );
 
 

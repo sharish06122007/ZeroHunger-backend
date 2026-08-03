@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Food = require('../models/Food');
 const Request = require('../models/Request');
 const apiResponse = require('../utils/apiResponse');
+const { emitEvent } = require('../config/socket');
 
 const createFood = async (req, res) => {
   const {
@@ -21,6 +22,9 @@ const createFood = async (req, res) => {
     images,
     tags: tags ? (Array.isArray(tags) ? tags : tags.split(',').map(t => t.trim())) : [],
   });
+
+  emitEvent('food:created', food);
+  emitEvent('analytics:update', { message: 'New food listing created' });
 
   return apiResponse.success(res, food, 'Food listing created successfully', 201);
 };
