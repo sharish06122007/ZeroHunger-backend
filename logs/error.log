@@ -32,3 +32,7 @@
 2026-08-02 22:13:39 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
 2026-08-02 22:13:49 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
 2026-08-03 19:51:04 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-05 23:06:11 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-05 23:08:54 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000
+2026-08-05 23:10:46 error: MongoDB connection error: connect EPERM 127.0.0.1:27017 - Local (0.0.0.0:0)
+2026-08-05 23:12:31 error: Uncaught Exception: listen EADDRINUSE: address already in use 0.0.0.0:3000

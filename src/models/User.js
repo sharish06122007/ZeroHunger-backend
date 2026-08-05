@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
     role: {
       type: String,
-      enum: ['restaurant', 'volunteer', 'ngo', 'donor', 'receiver', 'admin'],
+      enum: ['restaurant', 'volunteer', 'ngo', 'donor', 'receiver', 'admin', 'customer', 'home_food_maker', 'delivery_partner'],
       default: 'donor',
     },
     organizationName: { type: String, trim: true, default: '' },

@@ -28,6 +28,8 @@ const dashboardRoutes = require('./routes/dashboard');
 const volunteerRoutes = require('./routes/volunteer');
 const notificationRoutes = require('./routes/notifications');
 const searchRoutes = require('./routes/search');
+const homeFoodRoutes = require('./routes/homeFood');
+const chatRoutes = require('./routes/chat');
 
 
 const app = express();
@@ -354,6 +356,16 @@ app.use(
 app.use(
   '/api/v1/search',
   searchRoutes
+);
+
+app.use(
+  '/api/v1/home-food',
+  homeFoodRoutes
+);
+
+app.use(
+  '/api/v1/chat',
+  chatRoutes
 );
 
 
