@@ -904,3 +904,8 @@
 2026-08-05 23:42:49 info: 127.0.0.1 - - [05/Aug/2026:18:12:49 +0000] "GET /api/v1/notifications HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
 2026-08-05 23:42:49 info: 127.0.0.1 - - [05/Aug/2026:18:12:49 +0000] "GET /api/v1/food?limit=5 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
 2026-08-05 23:42:50 info: 127.0.0.1 - - [05/Aug/2026:18:12:50 +0000] "GET /api/v1/dashboard/analytics HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-06 18:31:05 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 18:31:05 info: 📋 Environment: development
+2026-08-06 18:31:06 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 18:31:06 info: ✅ MongoDB connected successfully
+2026-08-06 18:31:11 info: Shutting down server...

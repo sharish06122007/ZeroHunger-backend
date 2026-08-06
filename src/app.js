@@ -1,13 +1,66 @@
-// app.js - ZeroHunger Express Application Configuration
+// ======================================================
+// ZeroHunger Express Application Configuration
+// Production Ready Version
+// ======================================================
+
 
 require("dotenv").config();
 
+
 const path = require("path");
 const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const compression = require("compression");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+const YAML = require("yamljs");
 
-// ===============================
+
+// Swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
+
+
+// Utils
+const logger = require("./utils/logger");
+
+
+// Middleware
+const rateLimiter = require("./middleware/rateLimiter");
+const errorHandler = require("./middleware/errorHandler");
+
+// Routes
+
+const authRoutes = require("./routes/auth");
+
+const foodRoutes = require("./routes/food");
+
+const requestRoutes = require("./routes/requests");
+
+const dashboardRoutes = require("./routes/dashboard");
+
+const volunteerRoutes = require("./routes/volunteer");
+
+const notificationRoutes = require("./routes/notifications");
+
+const searchRoutes = require("./routes/search");
+
+const homeFoodRoutes = require("./routes/homeFood");
+
+const chatRoutes = require("./routes/chat");
+
+
+// Create Express App
+
+const app = express();
+
+
+
+
+// ======================================================
 // CORS Configuration
-// ===============================
+// ======================================================
 
 
 const allowedOrigins = [
@@ -22,16 +75,19 @@ const allowedOrigins = [
 
     process.env.CLIENT_URL
 
+
 ].filter(Boolean);
 
 
 
 const corsOptions = {
 
-    origin: function(origin, callback){
+
+    origin:(origin,callback)=>{
 
 
-        // Allow Postman / Mobile Apps / Server Requests
+        // Allow Postman / Mobile / Server Requests
+
         if(!origin){
 
             return callback(null,true);
@@ -42,15 +98,15 @@ const corsOptions = {
 
         const allowed =
 
-            allowedOrigins.includes(origin)
+        allowedOrigins.includes(origin)
 
-            ||
+        ||
 
-            /^https:\/\/.*\.vercel\.app$/i.test(origin)
+        /^https:\/\/.*\.vercel\.app$/i.test(origin)
 
-            ||
+        ||
 
-            /^https:\/\/.*\.up\.railway\.app$/i.test(origin);
+        /^https:\/\/.*\.up\.railway\.app$/i.test(origin);
 
 
 
@@ -94,15 +150,10 @@ const corsOptions = {
     allowedHeaders:[
 
         "Content-Type",
-
         "Authorization",
-
         "Accept",
-
         "Origin",
-
         "X-Requested-With",
-
         "x-auth-token"
 
     ],
@@ -115,6 +166,7 @@ const corsOptions = {
     ]
 
 };
+
 
 
 
@@ -132,9 +184,12 @@ app.options(
 
 
 
-// ===============================
+
+
+
+// ======================================================
 // Body Parser
-// ===============================
+// ======================================================
 
 
 app.use(
@@ -163,13 +218,21 @@ express.urlencoded({
 
 
 
+
+
+
+// ======================================================
+// Cookies
+// ======================================================
+
+
 app.use(
 
 cookieParser(
 
-    process.env.COOKIE_SECRET ||
+process.env.COOKIE_SECRET ||
 
-    "zerohunger_cookie_secret"
+"zerohunger_cookie_secret"
 
 )
 
@@ -178,13 +241,15 @@ cookieParser(
 
 
 
-// ===============================
-// Performance
-// ===============================
+
+
+// ======================================================
+// Performance Middleware
+// ======================================================
 
 
 app.use(
-    compression()
+compression()
 );
 
 
@@ -193,13 +258,13 @@ app.use(
 
 morgan(
 
-    "combined",
+"combined",
 
-    {
+{
 
-        stream:logger.stream
+stream:logger.stream
 
-    }
+}
 
 )
 
@@ -208,9 +273,11 @@ morgan(
 
 
 
-// ===============================
+
+
+// ======================================================
 // Rate Limiting
-// ===============================
+// ======================================================
 
 
 app.use(
@@ -222,9 +289,12 @@ rateLimiter.global
 
 
 
-// ===============================
+
+
+
+// ======================================================
 // Static Files
-// ===============================
+// ======================================================
 
 
 app.use(
@@ -237,7 +307,7 @@ path.join(
 
 __dirname,
 
-"../uploads"
+"uploads"
 
 )
 
@@ -250,9 +320,11 @@ __dirname,
 
 
 
-// ===============================
-// Root Route
-// ===============================
+
+
+// ======================================================
+// Root API
+// ======================================================
 
 
 app.get(
@@ -264,18 +336,18 @@ app.get(
 
 res.status(200).json({
 
-    success:true,
+success:true,
 
-    service:"ZeroHunger API",
+service:"ZeroHunger API",
 
-    message:"Backend is running successfully 🚀",
+message:"Backend is running successfully 🚀",
 
-    version:"2.0.0",
+version:"2.0.0",
 
-    environment:
-    process.env.NODE_ENV,
+environment:
+process.env.NODE_ENV || "production",
 
-    docs:"/api-docs"
+docs:"/api-docs"
 
 
 });
@@ -290,9 +362,11 @@ res.status(200).json({
 
 
 
-// ===============================
-// Railway Health Check
-// ===============================
+
+
+// ======================================================
+// Health Checks
+// ======================================================
 
 
 app.get(
@@ -304,33 +378,32 @@ app.get(
 
 res.status(200).json({
 
-    status:"OK",
-
-    database:
-
-    mongoose.connection.readyState===1
-
-    ?
-
-    "connected"
-
-    :
-
-    "disconnected",
+status:"OK",
 
 
-    uptime:
+database:
 
-    Math.floor(
+mongoose.connection.readyState===1
 
-        process.uptime()
+?
 
-    ),
+"connected"
+
+:
+
+"disconnected",
 
 
-    timestamp:
+uptime:
 
-    new Date().toISOString()
+Math.floor(
+process.uptime()
+),
+
+
+timestamp:
+
+new Date().toISOString()
 
 
 });
@@ -339,6 +412,8 @@ res.status(200).json({
 }
 
 );
+
+
 
 
 
@@ -353,23 +428,24 @@ app.get(
 
 res.json({
 
-    success:true,
+success:true,
 
-    message:"ZeroHunger API Running",
+message:"ZeroHunger API Running",
 
-    version:"2.0.0",
+version:"2.0.0",
 
-    database:
 
-    mongoose.connection.readyState===1
+database:
 
-    ?
+mongoose.connection.readyState===1
 
-    "connected"
+?
 
-    :
+"connected"
 
-    "disconnected"
+:
+
+"disconnected"
 
 
 });
@@ -385,9 +461,9 @@ res.json({
 
 
 
-// ===============================
-// Swagger
-// ===============================
+// ======================================================
+// Swagger Documentation
+// ======================================================
 
 
 app.use(
@@ -403,6 +479,7 @@ swaggerSpec,
 {
 
 customSiteTitle:
+
 "ZeroHunger API Documentation"
 
 }
@@ -440,7 +517,10 @@ app.get(
 (req,res)=>{
 
 
-res.type("text/yaml");
+res.type(
+"text/yaml"
+);
+
 
 res.send(
 
@@ -465,97 +545,62 @@ swaggerSpec,
 
 
 
-
-// ===============================
+// ======================================================
 // API Routes
-// ===============================
+// ======================================================
 
 
 app.use(
-
 "/api/v1/auth",
-
 authRoutes
-
 );
 
 
 app.use(
-
 "/api/v1/food",
-
 foodRoutes
-
 );
 
 
-
 app.use(
-
 "/api/v1/requests",
-
 requestRoutes
-
 );
 
 
-
 app.use(
-
 "/api/v1/dashboard",
-
 dashboardRoutes
-
 );
 
 
-
 app.use(
-
 "/api/v1/volunteer",
-
 volunteerRoutes
-
 );
 
 
-
 app.use(
-
 "/api/v1/notifications",
-
 notificationRoutes
-
 );
 
 
-
 app.use(
-
 "/api/v1/search",
-
 searchRoutes
-
 );
 
 
-
 app.use(
-
 "/api/v1/home-food",
-
 homeFoodRoutes
-
 );
-
 
 
 app.use(
-
 "/api/v1/chat",
-
 chatRoutes
-
 );
 
 
@@ -563,9 +608,11 @@ chatRoutes
 
 
 
-// ===============================
+
+
+// ======================================================
 // 404 Handler
-// ===============================
+// ======================================================
 
 
 app.use(
@@ -575,10 +622,11 @@ app.use(
 
 res.status(404).json({
 
-    success:false,
+success:false,
 
-    message:
-    `Route ${req.originalUrl} not found`
+message:
+
+`Route ${req.originalUrl} not found`
 
 });
 
@@ -591,16 +639,17 @@ res.status(404).json({
 
 
 
-// ===============================
+
+
+
+// ======================================================
 // Global Error Handler
-// ===============================
+// ======================================================
 
 
-app.use(
+app.use(errorHandler);
 
-errorHandler
 
-);
 
 
 
