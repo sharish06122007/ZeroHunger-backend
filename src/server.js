@@ -1,150 +1,143 @@
-// server.js - ZeroHunger Backend Entry Point
+// server.js - ZeroHunger Backend Entry Point (Railway Production)
 
-require('dotenv').config();
+require("dotenv").config();
 
-const http = require('http');
-const app = require('./app');
-const connectDB = require('./config/db');
-const logger = require('./config/logger');
+const http = require("http");
+const app = require("./app");
+
+const connectDB = require("./config/db");
+const logger = require("./config/logger");
+
+const { initSocket } = require("./config/socket");
 
 
-const { initSocket } = require('./config/socket');
-
-/*
-  Railway automatically provides PORT.
-  Local development uses 3000.
-*/
 const PORT = process.env.PORT || 3000;
 
-const startServer = async () => {
-  try {
-    // Connect MongoDB
-    await connectDB();
 
-    // Create HTTP server
-    const server = http.createServer(app);
-
-    // Initialize Socket.IO
-    initSocket(server);
+// Create HTTP Server
+const server = http.createServer(app);
 
 
+// Initialize Socket.IO
+initSocket(server);
 
-    // Start server
-    server.listen(
-      PORT,
-      '0.0.0.0',
-      () => {
 
-        logger.info(
-          `🚀 ZeroHunger API running on port ${PORT}`
-        );
+// Start Server First (Railway Requirement)
+server.listen(PORT, "0.0.0.0", async () => {
 
-        logger.info(
-          `📋 Environment: ${process.env.NODE_ENV || 'development'}`
-        );
-
-      }
+    logger.info(
+        `🚀 ZeroHunger API running on port ${PORT}`
     );
 
 
+    logger.info(
+        `📋 Environment: ${process.env.NODE_ENV || "development"}`
+    );
 
-    // Handle unhandled promise errors
-    process.on(
-      'unhandledRejection',
-      (reason) => {
+
+    // Connect Database After Server Starts
+    try {
+
+        await connectDB();
+
+        logger.info(
+            "✅ MongoDB connected successfully"
+        );
+
+
+    } catch(error) {
 
         logger.error(
-          'Unhandled Promise Rejection:',
-          reason
+            "❌ MongoDB connection failed:",
+            error.message
         );
 
-      }
-    );
+    }
+
+});
 
 
 
-    // Handle uncaught errors
-    process.on(
-      'uncaughtException',
-      (error) => {
+// ===============================
+// Unhandled Promise Errors
+// ===============================
+
+process.on(
+    "unhandledRejection",
+    (reason) => {
 
         logger.error(
-          'Uncaught Exception:',
-          error
+            "Unhandled Promise Rejection:",
+            reason
         );
 
-        process.exit(1);
+    }
+);
 
-      }
+
+
+
+// ===============================
+// Uncaught Errors
+// ===============================
+
+process.on(
+    "uncaughtException",
+    (error)=>{
+
+        logger.error(
+            "Uncaught Exception:",
+            error
+        );
+
+
+        shutdown();
+
+    }
+);
+
+
+
+
+// ===============================
+// Graceful Shutdown
+// ===============================
+
+const shutdown = ()=>{
+
+
+    logger.info(
+        "Shutting down server..."
     );
 
 
+    server.close(
+        ()=>{
 
-    // Railway shutdown handling
-    process.on(
-      'SIGTERM',
-      () => {
-
-        logger.info(
-          'SIGTERM received. Shutting down gracefully...'
-        );
-
-
-        server.close(
-          () => {
 
             logger.info(
-              'HTTP server closed'
+                "HTTP server closed"
             );
 
 
             process.exit(0);
 
-          }
-        );
-
-      }
+        }
     );
 
-
-
-    // Handle manual shutdown
-    process.on(
-      'SIGINT',
-      () => {
-
-        logger.info(
-          'SIGINT received. Shutting down...'
-        );
-
-
-        server.close(
-          () => {
-
-            process.exit(0);
-
-          }
-        );
-
-      }
-    );
-
-
-  } catch(error) {
-
-
-    logger.error(
-      '❌ Server startup failed:',
-      error
-    );
-
-
-    process.exit(1);
-
-  }
 
 };
 
 
 
-startServer();
+
+process.on(
+    "SIGTERM",
+    shutdown
+);
+
+
+process.on(
+    "SIGINT",
+    shutdown
+);

@@ -1,42 +1,56 @@
-// app.js - Express application configuration
+// app.js - ZeroHunger Express Application Configuration
 
-require('dotenv').config();
+require("dotenv").config();
 
-const path = require('path');
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
+const path = require("path");
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
 
-const { swaggerSpec } = require('./config/swagger');
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 
-const rateLimiter = require('./middleware/rateLimiter');
-const errorHandler = require('./middleware/errorHandler');
-const logger = require('./config/logger');
+const { swaggerSpec } = require("./config/swagger");
+
+const rateLimiter = require("./middleware/rateLimiter");
+const errorHandler = require("./middleware/errorHandler");
+const logger = require("./config/logger");
 
 
+// ===============================
 // Routes
-const authRoutes = require('./routes/auth');
-const foodRoutes = require('./routes/food');
-const requestRoutes = require('./routes/requests');
-const dashboardRoutes = require('./routes/dashboard');
-const volunteerRoutes = require('./routes/volunteer');
-const notificationRoutes = require('./routes/notifications');
-const searchRoutes = require('./routes/search');
-const homeFoodRoutes = require('./routes/homeFood');
-const chatRoutes = require('./routes/chat');
+// ===============================
+
+const authRoutes = require("./routes/auth");
+const foodRoutes = require("./routes/food");
+const requestRoutes = require("./routes/requests");
+const dashboardRoutes = require("./routes/dashboard");
+const volunteerRoutes = require("./routes/volunteer");
+const notificationRoutes = require("./routes/notifications");
+const searchRoutes = require("./routes/search");
+const homeFoodRoutes = require("./routes/homeFood");
+const chatRoutes = require("./routes/chat");
+
 
 
 const app = express();
 
 
-// Railway reverse proxy support
-app.set('trust proxy', 1);
+
+// ===============================
+// Railway Configuration
+// ===============================
+
+app.set(
+    "trust proxy",
+    1
+);
+
+
 
 
 // ===============================
@@ -44,117 +58,235 @@ app.set('trust proxy', 1);
 // ===============================
 
 app.use(
-  helmet({
-    crossOriginResourcePolicy: {
-      policy: 'cross-origin',
-    },
-  })
+
+    helmet({
+
+        crossOriginResourcePolicy:{
+            policy:"cross-origin"
+        }
+
+    })
+
 );
 
 
+
+
 // ===============================
-// CORS Configuration
+// CORS
 // ===============================
 
-const allowedOrigins = [
-  'http://localhost:4200',
-  'http://localhost:3000',
-  'https://localhost:4200',
-  'https://zerohunger.vercel.app',
-  process.env.CLIENT_URL,
+
+const allowedOrigins=[
+
+    "http://localhost:4200",
+
+    "http://localhost:3000",
+
+    process.env.CLIENT_URL,
+
+    "https://zerohunger.vercel.app"
+
 ].filter(Boolean);
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin) {
-      return callback(null, true);
-    }
 
-    const isAllowed = allowedOrigins.includes(origin)
-      || /^https:\/\/.*\.vercel\.app$/i.test(origin)
-      || /^https:\/\/.*\.up\.railway\.app$/i.test(origin)
-      || /^https:\/\/.*\.netlify\.app$/i.test(origin)
-      || /^http:\/\/localhost(:\d+)?$/i.test(origin)
-      || /^https:\/\/localhost(:\d+)?$/i.test(origin);
-
-    if (isAllowed) {
-      return callback(null, true);
-    }
-
-    return callback(null, false);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-Requested-With'],
-  exposedHeaders: ['Set-Cookie'],
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-
-
-// ===============================
-// Body Parsing
-// ===============================
 
 app.use(
-  express.json({
-    limit: '10mb'
-  })
+
+cors({
+
+    origin:(origin,callback)=>{
+
+
+        if(!origin){
+
+            return callback(null,true);
+
+        }
+
+
+
+        if(
+
+            allowedOrigins.includes(origin)
+
+            ||
+
+            /^https:\/\/.*\.vercel\.app$/i.test(origin)
+
+            ||
+
+            /^https:\/\/.*\.up\.railway\.app$/i.test(origin)
+
+        ){
+
+            return callback(null,true);
+
+        }
+
+
+
+        return callback(null,false);
+
+
+    },
+
+
+    credentials:true,
+
+
+    methods:[
+
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS"
+
+    ],
+
+
+    allowedHeaders:[
+
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "X-Requested-With"
+
+    ]
+
+
+})
+
 );
 
 
-app.use(
-  express.urlencoded({
-    extended: true,
-    limit: '10mb'
-  })
+
+app.options(
+    "*",
+    cors()
 );
 
 
+
+
+
+// ===============================
+// Body Parser
+// ===============================
+
+
 app.use(
-  cookieParser(
-    process.env.COOKIE_SECRET || 'zerohunger_cookie_secret'
-  )
+
+express.json({
+
+    limit:"10mb"
+
+})
+
 );
 
 
-// ===============================
-// Performance & Logging
-// ===============================
 
-app.use(compression());
+app.use(
+
+express.urlencoded({
+
+    extended:true,
+
+    limit:"10mb"
+
+})
+
+);
+
 
 
 app.use(
-  morgan(
-    'combined',
+
+cookieParser(
+
+    process.env.COOKIE_SECRET ||
+
+    "zerohunger_cookie_secret"
+
+)
+
+);
+
+
+
+
+// ===============================
+// Performance
+// ===============================
+
+
+app.use(
+    compression()
+);
+
+
+
+app.use(
+
+morgan(
+
+    "combined",
+
     {
-      stream: logger.stream
+
+        stream:logger.stream
+
     }
-  )
+
+)
+
 );
+
+
 
 
 // ===============================
 // Rate Limiting
 // ===============================
 
+
 app.use(
-  rateLimiter.global
+
+rateLimiter.global
+
 );
+
+
 
 
 // ===============================
 // Static Files
 // ===============================
 
+
 app.use(
-  '/uploads',
-  express.static(
-    path.join(__dirname, '../uploads')
-  )
+
+"/uploads",
+
+express.static(
+
+path.join(
+
+__dirname,
+
+"../uploads"
+
+)
+
+)
+
 );
+
+
+
 
 
 
@@ -162,156 +294,215 @@ app.use(
 // Root Route
 // ===============================
 
-app.get('/', (req,res)=>{
 
-  res.json({
+app.get(
+
+"/",
+
+(req,res)=>{
+
+
+res.status(200).json({
+
     success:true,
-    name:"ZeroHunger API",
+
+    service:"ZeroHunger API",
+
     message:"Backend is running successfully 🚀",
-    version:"2.0.0",
-    documentation:"/api-docs"
-  });
-
-});
-
-
-
-// ===============================
-// Health Check
-// ===============================
-
-app.get('/health',(req,res)=>{
-
-  const databaseStatus =
-    mongoose.connection &&
-    mongoose.connection.readyState === 1
-      ? "connected"
-      : "disconnected";
-
-
-  res.status(200).json({
-
-    status:"ok",
-
-    database:databaseStatus,
-
-    uptime:Math.floor(
-      process.uptime()
-    ),
-
-    timestamp:
-      new Date().toISOString()
-
-  });
-
-});
-
-
-
-// API Health
-
-app.get('/api/v1/health',(req,res)=>{
-
-
-  const databaseStatus =
-    mongoose.connection &&
-    mongoose.connection.readyState === 1
-      ? "connected"
-      : "disconnected";
-
-
-  res.json({
-
-    success:true,
-
-    message:
-      "ZeroHunger API is running",
 
     version:"2.0.0",
 
-    database:
-      databaseStatus,
+    environment:
+    process.env.NODE_ENV,
 
-    timestamp:
-      new Date().toISOString()
-
-  });
+    docs:"/api-docs"
 
 
 });
 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'OK',
-    timestamp: new Date().toISOString(),
-  });
-});
 
+}
 
-
-// ===============================
-// Swagger Documentation
-// ===============================
-
-
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(
-    swaggerSpec,
-    {
-      customCss:
-      `
-      .swagger-ui .topbar {
-        display:none
-      }
-
-      .swagger-ui {
-        font-family:sans-serif
-      }
-      `,
-
-      customSiteTitle:
-      "ZeroHunger API Documentation"
-
-    }
-  )
 );
 
 
 
-app.get('/openapi.json',(req,res)=>{
 
-  res.setHeader(
-    'Content-Type',
-    'application/json'
-  );
 
-  res.send(
-    swaggerSpec
-  );
+
+// ===============================
+// Railway Health Check
+// ===============================
+
+
+app.get(
+
+"/health",
+
+(req,res)=>{
+
+
+res.status(200).json({
+
+    status:"OK",
+
+    database:
+
+    mongoose.connection.readyState===1
+
+    ?
+
+    "connected"
+
+    :
+
+    "disconnected",
+
+
+    uptime:
+
+    Math.floor(
+
+        process.uptime()
+
+    ),
+
+
+    timestamp:
+
+    new Date().toISOString()
+
 
 });
 
 
+}
 
-app.get('/openapi.yaml',(req,res)=>{
-
-  res.setHeader(
-    'Content-Type',
-    'text/yaml'
-  );
+);
 
 
-  res.send(
-    YAML.stringify(
-      swaggerSpec,
-      4
-    )
-  );
+
+
+
+app.get(
+
+"/api/v1/health",
+
+(req,res)=>{
+
+
+res.json({
+
+    success:true,
+
+    message:"ZeroHunger API Running",
+
+    version:"2.0.0",
+
+    database:
+
+    mongoose.connection.readyState===1
+
+    ?
+
+    "connected"
+
+    :
+
+    "disconnected"
+
 
 });
+
+
+}
+
+);
+
+
+
+
+
+
+
+// ===============================
+// Swagger
+// ===============================
+
+
+app.use(
+
+"/api-docs",
+
+swaggerUi.serve,
+
+swaggerUi.setup(
+
+swaggerSpec,
+
+{
+
+customSiteTitle:
+"ZeroHunger API Documentation"
+
+}
+
+)
+
+);
+
+
+
+
+
+app.get(
+
+"/openapi.json",
+
+(req,res)=>{
+
+
+res.json(swaggerSpec);
+
+
+}
+
+);
+
+
+
+
+
+app.get(
+
+"/openapi.yaml",
+
+(req,res)=>{
+
+
+res.type("text/yaml");
+
+res.send(
+
+YAML.stringify(
+
+swaggerSpec,
+
+4
+
+)
+
+);
+
+
+}
+
+);
+
+
+
+
+
 
 
 
@@ -321,52 +512,94 @@ app.get('/openapi.yaml',(req,res)=>{
 
 
 app.use(
-  '/api/v1/auth',
-  authRoutes
+
+"/api/v1/auth",
+
+authRoutes
+
 );
 
 
 app.use(
-  '/api/v1/food',
-  foodRoutes
+
+"/api/v1/food",
+
+foodRoutes
+
 );
+
 
 
 app.use(
-  '/api/v1/requests',
-  requestRoutes
+
+"/api/v1/requests",
+
+requestRoutes
+
 );
+
+
+
+app.use(
+
+"/api/v1/dashboard",
+
+dashboardRoutes
+
+);
+
 
 
 app.use(
-  '/api/v1/dashboard',
-  dashboardRoutes
+
+"/api/v1/volunteer",
+
+volunteerRoutes
+
 );
 
-app.use(
-  '/api/v1/volunteer',
-  volunteerRoutes
-);
+
 
 app.use(
-  '/api/v1/notifications',
-  notificationRoutes
+
+"/api/v1/notifications",
+
+notificationRoutes
+
 );
 
-app.use(
-  '/api/v1/search',
-  searchRoutes
-);
+
 
 app.use(
-  '/api/v1/home-food',
-  homeFoodRoutes
+
+"/api/v1/search",
+
+searchRoutes
+
 );
 
+
+
 app.use(
-  '/api/v1/chat',
-  chatRoutes
+
+"/api/v1/home-food",
+
+homeFoodRoutes
+
 );
+
+
+
+app.use(
+
+"/api/v1/chat",
+
+chatRoutes
+
+);
+
+
+
 
 
 
@@ -376,21 +609,25 @@ app.use(
 
 
 app.use(
-  (req,res)=>{
 
-    res.status(404).json({
+(req,res)=>{
 
-      success:false,
 
-      message:
-      `Route ${req.originalUrl} not found`,
+res.status(404).json({
 
-      errors:[]
+    success:false,
 
-    });
+    message:
+    `Route ${req.originalUrl} not found`
 
-  }
+});
+
+
+}
+
 );
+
+
 
 
 
@@ -400,8 +637,12 @@ app.use(
 
 
 app.use(
-  errorHandler
+
+errorHandler
+
 );
+
+
 
 
 
