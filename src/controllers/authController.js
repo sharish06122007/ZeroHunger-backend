@@ -131,16 +131,30 @@ const resendOtp = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  const origin = req.headers.origin || req.get('Referrer') || 'no-origin';
+  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+
+  logger.info(`Login attempt for ${email} from origin=${origin} ip=${ip}`);
 
   const user = await User.findOne({ email }).select('+password +refreshToken');
-  if (!user) return apiResponse.error(res, 'Invalid email or password', [], 401);
+  if (!user) {
+    logger.warn(`Login failed (no user) for ${email} from ${origin}`);
+    return apiResponse.error(res, 'Invalid email or password', [], 401);
+  }
 
-  if (!user.isActive) return apiResponse.error(res, 'Your account has been disabled. Contact support.', [], 403);
+  if (!user.isActive) {
+    logger.warn(`Login blocked (disabled) for ${email}`);
+    return apiResponse.error(res, 'Your account has been disabled. Contact support.', [], 403);
+  }
 
   const isMatch = await user.comparePassword(password);
-  if (!isMatch) return apiResponse.error(res, 'Invalid email or password', [], 401);
+  if (!isMatch) {
+    logger.warn(`Login failed (bad password) for ${email}`);
+    return apiResponse.error(res, 'Invalid email or password', [], 401);
+  }
 
   if (!user.isVerified) {
+    logger.warn(`Login blocked (unverified) for ${email}`);
     return apiResponse.error(res, 'Please verify your email before logging in', [], 403);
   }
 
@@ -170,6 +184,7 @@ const login = async (req, res) => {
     createdAt: user.createdAt,
   };
 
+  logger.info(`Login successful for ${email} from ${origin}`);
   return apiResponse.success(res, { user: sanitizedUser, accessToken: tokens.accessToken }, 'Login successful');
 };
 

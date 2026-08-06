@@ -909,3 +909,48 @@
 2026-08-06 18:31:06 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
 2026-08-06 18:31:06 info: ✅ MongoDB connected successfully
 2026-08-06 18:31:11 info: Shutting down server...
+2026-08-06 18:33:09 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 18:33:09 info: 📋 Environment: development
+2026-08-06 18:33:09 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 18:33:09 info: ✅ MongoDB connected successfully
+2026-08-06 18:51:22 error: Port 3000 already in use.
+2026-08-06 18:51:22 warn: Attempting to listen on alternate port 3001 (development retry)
+2026-08-06 18:51:22 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 18:51:22 info: 📋 Environment: development
+2026-08-06 18:51:22 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 18:51:22 info: ✅ MongoDB connected successfully
+2026-08-06 18:51:37 error: Port 3000 already in use.
+2026-08-06 18:51:37 warn: Attempting to listen on alternate port 3001 (development retry)
+2026-08-06 18:51:37 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 18:51:37 info: 📋 Environment: development
+2026-08-06 18:51:38 info: MongoDB connected: ac-npgbd3y-shard-00-00.dmplhn8.mongodb.net
+2026-08-06 18:51:38 info: ✅ MongoDB connected successfully
+2026-08-06 18:52:07 error: Port 3000 already in use.
+2026-08-06 18:52:07 warn: Attempting to listen on alternate port 3001 (development retry)
+2026-08-06 18:52:07 info: 🚀 ZeroHunger API running on port 3001
+2026-08-06 18:52:07 info: 📋 Environment: development
+2026-08-06 18:52:07 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 18:52:07 info: ✅ MongoDB connected successfully
+2026-08-06 18:52:14 error: Port 3000 already in use.
+2026-08-06 18:52:14 warn: Attempting to listen on alternate port 3001 (development retry)
+2026-08-06 18:52:14 info: 🚀 ZeroHunger API running on port 3001
+2026-08-06 18:52:14 info: 📋 Environment: development
+2026-08-06 18:52:15 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 18:52:15 info: ✅ MongoDB connected successfully
+2026-08-06 18:55:51 debug: CORS origin: no-origin -> blocked
+2026-08-06 18:55:51 info: 127.0.0.1 - - [06/Aug/2026:13:25:51 +0000] "GET /api/v1/health HTTP/1.1" 200 95 "-" "curl/8.7.1"
+2026-08-06 18:56:04 debug: CORS origin: http://localhost:4200 -> allowed
+2026-08-06 18:56:04 info: 127.0.0.1 - - [06/Aug/2026:13:26:04 +0000] "GET /api/v1/health HTTP/1.1" 200 92 "-" "curl/8.7.1"
+2026-08-06 19:01:23 error: Port 3000 already in use.
+2026-08-06 19:01:23 warn: Attempting to listen on alternate port 3001 (development retry)
+2026-08-06 19:01:23 info: 🚀 ZeroHunger API running on port 3001
+2026-08-06 19:01:23 info: 📋 Environment: development
+2026-08-06 19:01:24 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 19:01:24 info: ✅ MongoDB connected successfully
+2026-08-06 19:02:08 error: Port 3000 already in use.
+2026-08-06 19:02:08 warn: Attempting to listen on alternate port 3001 (development retry)
+2026-08-06 19:02:08 info: 🚀 ZeroHunger API running on port 3001
+2026-08-06 19:02:08 info: 📋 Environment: development
+2026-08-06 19:02:09 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 19:02:09 info: ✅ MongoDB connected successfully
+2026-08-06 19:12:58 info: Shutting down server...

@@ -2,14 +2,19 @@
 const { Server } = require('socket.io');
 const logger = require('./logger');
 const Chat = require('../models/Chat');
+const { originValidator } = require('./cors');
 
 let io = null;
 
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: '*',
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        originValidator(origin, callback);
+      },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+      credentials: true,
     },
   });
 
