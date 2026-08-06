@@ -6,6 +6,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   process.env.CLIENT_URL,
   'https://zerohunger.vercel.app',
+  'https://zerohunger-frontend-production.up.railway.app'
 ].filter(Boolean);
 
 const isRailway = (origin) => /^https?:\/\/(?:.*\.)?railway\.app$/i.test(origin);
@@ -14,7 +15,7 @@ const isVercel = (origin) => /^https:\/\/.*\.vercel\.app$/i.test(origin);
 const originValidator = (origin, callback) => {
   if (!origin) return callback(null, true);
   if (allowedOrigins.includes(origin) || isRailway(origin) || isVercel(origin)) return callback(null, true);
-  return callback(new Error('Not allowed by CORS'), false);
+  return callback(null, false);
 };
 
 const corsOptions = {

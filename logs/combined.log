@@ -968,3 +968,15 @@
 2026-08-06 19:43:59 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
 2026-08-06 19:43:59 info: ✅ MongoDB connected successfully
 2026-08-06 19:44:16 info: Shutting down server...
+2026-08-06 19:56:48 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 19:56:48 info: 📋 Environment: development
+2026-08-06 19:56:51 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 19:56:51 info: ✅ MongoDB connected successfully
+2026-08-06 21:44:43 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 21:44:43 info: 📋 Environment: development
+2026-08-06 21:44:44 info: MongoDB connected: ac-npgbd3y-shard-00-01.dmplhn8.mongodb.net
+2026-08-06 21:44:44 info: ✅ MongoDB connected successfully
+2026-08-06 21:45:09 info: 🚀 ZeroHunger API running on port 3000
+2026-08-06 21:45:09 info: 📋 Environment: development
+2026-08-06 21:45:09 info: MongoDB connected: ac-npgbd3y-shard-00-02.dmplhn8.mongodb.net
+2026-08-06 21:45:09 info: ✅ MongoDB connected successfully
