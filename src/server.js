@@ -1,71 +1,95 @@
-// server.js - ZeroHunger Backend Entry Point (Railway Production)
+// ======================================================
+// ZeroHunger Backend Server
+// Railway Production Entry Point
+// ======================================================
+
 
 require("dotenv").config();
 
+
 const http = require("http");
+
 const app = require("./app");
 
 const connectDB = require("./config/db");
+
 const logger = require("./config/logger");
 
 const { initSocket } = require("./config/socket");
 
 
+
+
+// Railway provides PORT automatically
+
 const PORT = process.env.PORT || 3000;
 
 
+
 // Create HTTP Server
+
 const server = http.createServer(app);
 
+
+
+
 // Initialize Socket.IO
+
 initSocket(server);
 
-// Handle server errors (EADDRINUSE etc.)
-server.on('error', (err) => {
-    if (err && err.code === 'EADDRINUSE') {
-        logger.error(`Port ${PORT} already in use.`);
-        if (process.env.NODE_ENV !== 'production') {
-            const altPort = Number(PORT) + 1;
-            logger.warn(`Attempting to listen on alternate port ${altPort} (development retry)`);
-            server.listen(altPort, '0.0.0.0');
-            return;
-        }
-        process.exit(1);
-    }
-    logger.error('Server error:', err);
-    process.exit(1);
-});
-
-// Start Server First (Railway Requirement)
-server.listen(PORT, '0.0.0.0', async () => {
-    const addr = server.address();
-    const activePort = addr && addr.port ? addr.port : PORT;
-    logger.info(`🚀 ZeroHunger API running on port ${activePort}`);
-    logger.info(`📋 Environment: ${process.env.NODE_ENV || 'development'}`);
-
-    // Connect Database After Server Starts
-    try {
-        await connectDB();
-        logger.info('✅ MongoDB connected successfully');
-    } catch (error) {
-        logger.error('❌ MongoDB connection failed:', error.message || error);
-    }
-});
 
 
 
-// ===============================
-// Unhandled Promise Errors
-// ===============================
 
-process.on(
-    "unhandledRejection",
-    (reason) => {
+// ======================================================
+// Start Server
+// ======================================================
 
-        logger.error(
-            "Unhandled Promise Rejection:",
-            reason
+
+server.listen(
+    PORT,
+    "0.0.0.0",
+    async () => {
+
+
+        logger.info(
+            `🚀 ZeroHunger API running on port ${PORT}`
         );
+
+
+        logger.info(
+            `📋 Environment: ${process.env.NODE_ENV || "production"}`
+        );
+
+
+
+        // Connect Database after server starts
+
+        try {
+
+
+            await connectDB();
+
+
+            logger.info(
+                "✅ MongoDB connected successfully"
+            );
+
+
+        } catch(error){
+
+
+            logger.error(
+                "❌ MongoDB connection failed:",
+                error.message
+            );
+
+
+            // Do not stop server
+            // Railway health check can still pass
+
+        }
+
 
     }
 );
@@ -73,13 +97,62 @@ process.on(
 
 
 
-// ===============================
-// Uncaught Errors
-// ===============================
+
+
+// ======================================================
+// Server Error Handler
+// ======================================================
+
+
+server.on(
+    "error",
+    (error)=>{
+
+
+        logger.error(
+            "Server Error:",
+            error
+        );
+
+
+        process.exit(1);
+
+
+    }
+);
+
+
+
+
+
+
+// ======================================================
+// Unhandled Errors
+// ======================================================
+
+
+process.on(
+    "unhandledRejection",
+    (reason)=>{
+
+
+        logger.error(
+            "Unhandled Promise Rejection:",
+            reason
+        );
+
+
+    }
+);
+
+
+
+
 
 process.on(
     "uncaughtException",
     (error)=>{
+
 
         logger.error(
             "Uncaught Exception:",
@@ -89,17 +162,22 @@ process.on(
 
         shutdown();
 
+
     }
 );
 
 
 
 
-// ===============================
-// Graceful Shutdown
-// ===============================
 
-const shutdown = ()=>{
+
+
+// ======================================================
+// Graceful Shutdown
+// ======================================================
+
+
+function shutdown(){
 
 
     logger.info(
@@ -118,11 +196,14 @@ const shutdown = ()=>{
 
             process.exit(0);
 
+
         }
     );
 
 
-};
+}
+
+
 
 
 
