@@ -4,90 +4,35 @@ require("dotenv").config();
 
 const path = require("path");
 const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const compression = require("compression");
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
 
-const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
-
-const { swaggerSpec } = require("./config/swagger");
-
-const rateLimiter = require("./middleware/rateLimiter");
-const errorHandler = require("./middleware/errorHandler");
-const logger = require("./config/logger");
-
-
-// ===============================
-// Routes
-// ===============================
-
-const authRoutes = require("./routes/auth");
-const foodRoutes = require("./routes/food");
-const requestRoutes = require("./routes/requests");
-const dashboardRoutes = require("./routes/dashboard");
-const volunteerRoutes = require("./routes/volunteer");
-const notificationRoutes = require("./routes/notifications");
-const searchRoutes = require("./routes/search");
-const homeFoodRoutes = require("./routes/homeFood");
-const chatRoutes = require("./routes/chat");
-
-
-
-const app = express();
-
-
-
-// ===============================
-// Railway Configuration
-// ===============================
-
-app.set(
-    "trust proxy",
-    1
-);
-
-
-
-
-// ===============================
-// Security Middleware
-// ===============================
-
-app.use(
-
-    helmet({
-
-        crossOriginResourcePolicy:{
-            policy:"cross-origin"
+        if (
+            allowedOrigins.includes(origin) ||
+            /^https:\/\/.*\.vercel\.app$/i.test(origin) ||
+            /^https?:\/\/(?:.*\.)?railway\.app$/i.test(origin)
+        ) {
+            return callback(null, true);
         }
 
-    })
+        return callback(null, false);
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With", "x-auth-token", "X-Requested-With", "Origin"]
+};
 
-);
+app.use(cors(corsOptions));
 
-
-
-
-// ===============================
-// CORS
-// ===============================
-
-
-const allowedOrigins=[
-
-    "http://localhost:4200",
-
+// Use the same options for preflight responses
+app.options("*", cors(corsOptions));
     "http://localhost:3000",
 
     process.env.CLIENT_URL,
 
     "https://zerohunger.vercel.app"
-
-].filter(Boolean);
+.filter(Boolean);
 
 
 
