@@ -4,45 +4,34 @@ require("dotenv").config();
 
 const path = require("path");
 const express = require("express");
-const corsOptions = {
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
 
-        if (
-            allowedOrigins.includes(origin) ||
-            /^https:\/\/.*\.vercel\.app$/i.test(origin) ||
-            /^https?:\/\/(?:.*\.)?railway\.app$/i.test(origin)
-        ) {
-            return callback(null, true);
-        }
+// ===============================
+// CORS Configuration
+// ===============================
 
-        return callback(null, false);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With", "x-auth-token", "X-Requested-With", "Origin"]
-};
 
-app.use(cors(corsOptions));
+const allowedOrigins = [
 
-// Use the same options for preflight responses
-app.options("*", cors(corsOptions));
+    "http://localhost:4200",
+
     "http://localhost:3000",
 
-    process.env.CLIENT_URL,
+    "https://zerohunger-frontend-production.up.railway.app",
 
-    "https://zerohunger.vercel.app"
-.filter(Boolean);
+    "https://zerohunger.vercel.app",
 
+    process.env.CLIENT_URL
 
-
-app.use(
-
-cors({
-
-    origin:(origin,callback)=>{
+].filter(Boolean);
 
 
+
+const corsOptions = {
+
+    origin: function(origin, callback){
+
+
+        // Allow Postman / Mobile Apps / Server Requests
         if(!origin){
 
             return callback(null,true);
@@ -51,7 +40,7 @@ cors({
 
 
 
-        if(
+        const allowed =
 
             allowedOrigins.includes(origin)
 
@@ -61,9 +50,11 @@ cors({
 
             ||
 
-            /^https:\/\/.*\.up\.railway\.app$/i.test(origin)
+            /^https:\/\/.*\.up\.railway\.app$/i.test(origin);
 
-        ){
+
+
+        if(allowed){
 
             return callback(null,true);
 
@@ -71,7 +62,15 @@ cors({
 
 
 
-        return callback(null,false);
+        console.log(
+            "Blocked CORS:",
+            origin
+        );
+
+
+        return callback(
+            new Error("CORS blocked")
+        );
 
 
     },
@@ -95,25 +94,41 @@ cors({
     allowedHeaders:[
 
         "Content-Type",
+
         "Authorization",
+
         "Accept",
-        "X-Requested-With"
+
+        "Origin",
+
+        "X-Requested-With",
+
+        "x-auth-token"
+
+    ],
+
+
+    exposedHeaders:[
+
+        "Set-Cookie"
 
     ]
 
+};
 
-})
 
+
+
+app.use(
+    cors(corsOptions)
 );
 
 
 
 app.options(
     "*",
-    cors()
+    cors(corsOptions)
 );
-
-
 
 
 
