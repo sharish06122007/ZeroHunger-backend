@@ -893,3 +893,14 @@
 2026-08-05 23:35:17 info: 127.0.0.1 - - [05/Aug/2026:18:05:17 +0000] "GET /api/v1/notifications HTTP/1.1" 200 108 "http://localhost:4200/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
 2026-08-05 23:35:17 info: 127.0.0.1 - - [05/Aug/2026:18:05:17 +0000] "GET /api/v1/food?limit=5 HTTP/1.1" 200 - "http://localhost:4200/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
 2026-08-05 23:35:17 info: 127.0.0.1 - - [05/Aug/2026:18:05:17 +0000] "GET /api/v1/dashboard/analytics HTTP/1.1" 200 417 "http://localhost:4200/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:37:15 info: 🔌 Socket client disconnected: SIpVFEe9W0k1h_xXAAAB
+2026-08-05 23:39:45 info: 127.0.0.1 - - [05/Aug/2026:18:09:45 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 578 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:39:49 info: 🔌 Socket client connected: cfh07s_qVvvfrfrrAAAD
+2026-08-05 23:39:49 info: 127.0.0.1 - - [05/Aug/2026:18:09:49 +0000] "GET /api/v1/notifications HTTP/1.1" 200 108 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:39:49 info: 127.0.0.1 - - [05/Aug/2026:18:09:49 +0000] "GET /api/v1/food?limit=5 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:39:49 info: 127.0.0.1 - - [05/Aug/2026:18:09:49 +0000] "GET /api/v1/dashboard/analytics HTTP/1.1" 200 417 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:42:49 info: 🔌 Socket client disconnected: cfh07s_qVvvfrfrrAAAD
+2026-08-05 23:42:49 info: 🔌 Socket client connected: O6nAaIEssbZvEZiZAAAF
+2026-08-05 23:42:49 info: 127.0.0.1 - - [05/Aug/2026:18:12:49 +0000] "GET /api/v1/notifications HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:42:49 info: 127.0.0.1 - - [05/Aug/2026:18:12:49 +0000] "GET /api/v1/food?limit=5 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+2026-08-05 23:42:50 info: 127.0.0.1 - - [05/Aug/2026:18:12:50 +0000] "GET /api/v1/dashboard/analytics HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
