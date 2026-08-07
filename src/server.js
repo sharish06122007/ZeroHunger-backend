@@ -55,6 +55,7 @@ server.listen(
         logger.info(
             `🚀 ZeroHunger API running on port ${PORT}`
         );
+        console.log("Server Started");
 
 
         logger.info(
@@ -74,6 +75,7 @@ server.listen(
             logger.info(
                 "✅ MongoDB connected successfully"
             );
+            console.log("MongoDB Connected");
 
 
         } catch(error){

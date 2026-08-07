@@ -97,6 +97,7 @@ app.get('/health', (req, res) => {
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, message: 'ZeroHunger API Running', version: '2.0.0', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
 });
+console.log("Health Route Loaded");
 
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { customSiteTitle: 'ZeroHunger API Documentation' }));

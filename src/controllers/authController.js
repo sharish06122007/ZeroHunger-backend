@@ -153,9 +153,14 @@ const login = async (req, res) => {
     return apiResponse.error(res, 'Invalid email or password', [], 401);
   }
 
-  if (!user.isVerified) {
+  const allowUnverifiedLogin = process.env.NODE_ENV !== 'production' || process.env.ALLOW_UNVERIFIED_LOGIN === 'true';
+  if (!user.isVerified && !allowUnverifiedLogin) {
     logger.warn(`Login blocked (unverified) for ${email}`);
     return apiResponse.error(res, 'Please verify your email before logging in', [], 403);
+  }
+
+  if (!user.isVerified && allowUnverifiedLogin) {
+    logger.info(`Allowing login for unverified user ${email} in ${process.env.NODE_ENV || 'development'}`);
   }
 
   user.lastLogin = new Date();

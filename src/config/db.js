@@ -24,12 +24,12 @@ const connectDB = async () => {
         return conn;
       } catch (fallbackErr) {
         logger.error('MongoDB connection error:', fallbackErr);
-        process.exit(1);
+        throw fallbackErr;
       }
     }
 
     logger.error('MongoDB connection error:', err);
-    process.exit(1);
+    throw err;
   }
 };
 
